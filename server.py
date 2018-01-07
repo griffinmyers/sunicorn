@@ -1,10 +1,15 @@
 import socket
+import signal
 import atexit
 import os
 import sys
 
 def onexit(acceptor):
     acceptor.close()
+
+def onquit(*args):
+    print('So long!')
+    sys.exit(1)
 
 def main():
     acceptor = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
@@ -15,6 +20,7 @@ def main():
 
     for i in range(3):
         if os.fork() == 0:
+            signal.signal(signal.SIGINT, lambda *args: sys.exit(1))
             pid = os.getpid()
             print('[{0}] child listening on shared socket'.format(pid))
 
@@ -27,6 +33,7 @@ def main():
 
             sys.exit(0)
 
+    signal.signal(signal.SIGINT, onquit)
     os.wait()
 
 if __name__ == '__main__':
