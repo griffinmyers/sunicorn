@@ -4,12 +4,15 @@ import atexit
 import os
 import sys
 
+
 def onexit(acceptor):
     acceptor.close()
+
 
 def onquit(*args):
     print('So long!')
     sys.exit(1)
+
 
 def main():
     acceptor = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
@@ -35,6 +38,7 @@ def main():
 
     signal.signal(signal.SIGINT, onquit)
     os.wait()
+
 
 if __name__ == '__main__':
     main()
